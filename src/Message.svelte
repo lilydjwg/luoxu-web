@@ -59,7 +59,7 @@
 
 <style>
   .message {
-    margin: 1em;
+    margin: 1em 0;
     padding: 0.5em;
     max-width: max-content;
     border: 1px #eeeeee solid;

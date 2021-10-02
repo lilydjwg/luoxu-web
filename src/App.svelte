@@ -125,7 +125,7 @@
       on:input={() => error = ''}
       on:keyup={e => {if(e.key == 'Enter'){do_search()}}}
     />
-    <button on:click={do_search}>搜索</button>
+    <button on:click={() => do_search()}>搜索</button>
   </div>
 
   {#if error}

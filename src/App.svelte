@@ -149,11 +149,20 @@
     margin: 1em;
   }
 
+  button {
+    white-space: nowrap;
+  }
+
   #searchbox {
     display: flex;
   }
   #searchbox input[type=search] {
     flex-grow: 1;
+  }
+  @media (max-width: 500px) {
+    #searchbox {
+      flex-direction: column;
+    }
   }
 
   .error {

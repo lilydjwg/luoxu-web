@@ -128,15 +128,16 @@
     <button on:click={() => do_search()}>搜索</button>
   </div>
 
-  {#if error}
-    <div class="error">{error}</div>
-  {/if}
-
   {#if result}
     {#each result.messages as message}
       <Message msg={message} group={result.group_pub_id} now={now} />
     {/each}
   {/if}
+
+  {#if error}
+    <div class="error">{error}</div>
+  {/if}
+
   {#if loading}
     <div id="loading"><p>正在加载...</p></div>
   {:else if result && result.has_more}
@@ -177,6 +178,9 @@
   #loading > * {
     border: 1px #bfbfbf solid;
     border-radius: 2em;
+  }
+  #loading > *, #more > * {
     padding: 0.5em 1em;
+    margin: 1em 0;
   }
 </style>

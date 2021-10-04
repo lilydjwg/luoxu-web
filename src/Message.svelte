@@ -46,14 +46,12 @@
 
 </script>
 
-<div>
-  <div class="message">
-    <img src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
-    <div>
-      <div class="name">{msg.from_name}</div>
-      <div class="body"><pre>{msg.text}</pre></div>
-      <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
-    </div>
+<div class="message">
+  <img src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
+  <div>
+    <div class="name">{msg.from_name || ' '}</div>
+    <pre>{msg.text}</pre>
+    <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
   </div>
 </div>
 
@@ -67,11 +65,6 @@
     border-radius: 5px;
     display: flex;
   }
-  .message::after {
-    content: '';
-    display: block;
-    clear: both;
-  }
   img {
     padding-right: 0.5em;
   }
@@ -80,7 +73,7 @@
     color: #1e90ff;
   }
   pre {
-    white-space: break-spaces;
+    white-space: pre-wrap;
     margin: 0.2em 0;
   }
   .time {

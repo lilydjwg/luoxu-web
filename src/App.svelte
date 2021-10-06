@@ -26,9 +26,9 @@
   }
 
   onMount(async () => {
+    do_hash_search()
     const res = await fetch(`${LUOXU_URL}/groups`)
     groups = (await res.json()).groups
-    do_hash_search()
   })
 
   function update_title() {

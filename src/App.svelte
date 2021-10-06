@@ -121,13 +121,17 @@
 
 <main>
   <div id="searchbox">
-    <select bind:value={group} on:change={on_group_change}>
-      {#each groups as group}
-        <option value={group.group_id}>{group.name}</option>
-      {:else}
-        <option selected value=''>正在加载群组信息...</option>
-      {/each}
-    </select>
+    {#if groups.length == 0}
+      <select>
+        <option selected>正在加载群组信息...</option>
+      </select>
+    {:else}
+      <select bind:value={group} on:change={on_group_change}>
+        {#each groups as group}
+          <option value={group.group_id}>{group.name}</option>
+        {/each}
+      </select>
+    {/if}
     <input type="search" bind:value={query}
       on:input={() => error = ''}
       on:keydown={e => {if(e.key == 'Enter'){do_search()}}}

@@ -29,6 +29,9 @@
     do_hash_search()
     const res = await fetch(`${LUOXU_URL}/groups`)
     groups = (await res.json()).groups
+    if(!group) {
+      group = ''
+    }
   })
 
   function update_title() {

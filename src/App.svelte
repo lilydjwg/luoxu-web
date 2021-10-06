@@ -101,6 +101,13 @@
     }
   }
 
+  async function on_group_change() {
+    error = ''
+    if(query) {
+      await do_search()
+    }
+  }
+
   async function do_search_more() {
     const more = result.messages[result.messages.length-1].t
     const old_msgs = result.messages
@@ -114,7 +121,7 @@
 
 <main>
   <div id="searchbox">
-    <select bind:value={group} on:change={() => error = ''}>
+    <select bind:value={group} on:change={on_group_change}>
       {#each groups as group}
         <option value={group.group_id}>{group.name}</option>
       {:else}
@@ -123,7 +130,7 @@
     </select>
     <input type="search" bind:value={query}
       on:input={() => error = ''}
-      on:keyup={e => {if(e.key == 'Enter'){do_search()}}}
+      on:keydown={e => {if(e.key == 'Enter'){do_search()}}}
     />
     <button on:click={() => do_search()}>搜索</button>
   </div>

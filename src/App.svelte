@@ -58,6 +58,7 @@
         query = info.get('q')
       }
       if(group && query) {
+        result = null
         do_search()
       }
     }
@@ -148,19 +149,20 @@
     {/each}
   {/if}
 
-  <div class="info">
-    {#if loading}
-      <p>正在加载...</p>
-    {:else if error}
+  {#if loading}
+    <div class="info"><p>正在加载...</p></div>
+  {:else}
+    {#if error}
       <p class="error">{error}</p>
     {:else if result && result.messages.length == 0}
-      <p>没有匹配的消息。</p>
-    {:else if result && result.has_more}
-      <button on:click={do_search_more}>加载更多</button>
+      <div class="info"><p>没有匹配的消息。</p></div>
     {:else if result && !result.has_more}
-      <p>到底了。</p>
+      <div class="info"><p>到底了。</p></div>
     {/if}
-  </div>
+    {#if result && result.has_more}
+      <div class="info"><button on:click={do_search_more}>加载更多</button></div>
+    {/if}
+  {/if}
 </main>
 
 <style>

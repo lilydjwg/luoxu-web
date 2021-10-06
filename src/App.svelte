@@ -141,13 +141,11 @@
     {/each}
   {/if}
 
-  {#if error}
-    <div class="error">{error}</div>
-  {/if}
-
   <div class="info">
     {#if loading}
       <p>正在加载...</p>
+    {:else if error}
+      <p class="error">{error}</p>
     {:else if result && result.messages.length == 0}
       <p>没有匹配的消息。</p>
     {:else if result && result.has_more}

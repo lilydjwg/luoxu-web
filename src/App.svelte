@@ -148,12 +148,12 @@
   <div class="info">
     {#if loading}
       <p>正在加载...</p>
+    {:else if result && result.messages.length == 0}
+      <p>没有匹配的消息。</p>
     {:else if result && result.has_more}
       <button on:click={do_search_more}>加载更多</button>
     {:else if result && !result.has_more}
       <p>到底了。</p>
-    {:else if result && result.messages.length == 0}
-      <p>没有匹配的消息。</p>
     {/if}
   </div>
 </main>

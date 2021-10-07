@@ -47,8 +47,8 @@
 </script>
 
 <div class="message">
-  <img src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
-  <div>
+  <img class="avatar" src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
+  <div class="bubble">
     <div class="name">{msg.from_name || ' '}</div>
     <pre>{msg.text}</pre>
     <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
@@ -58,15 +58,37 @@
 <style>
   .message {
     margin: 1em 0;
-    padding: 0.5em;
-    max-width: max-content;
-    border: 1px #eeeeee solid;
-    box-shadow: 0 0 3px gray;
-    border-radius: 5px;
     display: flex;
   }
-  img {
-    padding-right: 0.5em;
+  .bubble {
+    padding: 0.5em;
+    max-width: max-content;
+    position: relative;
+    background: #eee;
+    border-radius: 0 5px 5px 5px;
+  }
+  .bubble::before, .bubble::after {
+    position: absolute;
+    content: "";
+    width: .7em;
+    height: 1em;
+    top: 0;
+    left: 0;
+    margin: 0 0 0 -.7em;
+  }
+  .bubble::before {
+    background: #eee;
+    border-radius: 50% 0 0 0;
+  }
+  .bubble::after {
+    background: #fff;
+    border-radius: 0 100% 0 0;
+  }
+  .avatar {
+    width: 3em;
+    height: 3em;
+    margin-right: 1em;
+    border-radius: 10%;
   }
   .name {
     white-space: nowrap;

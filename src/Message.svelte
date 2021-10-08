@@ -66,7 +66,7 @@
     padding: 0.5em;
     max-width: max-content;
     position: relative;
-    background: #f9f9f9;
+    background: #f2f2f2;
     border-radius: 0 5px 5px 5px;
   }
   .bubble::before, .bubble::after {
@@ -79,7 +79,7 @@
     margin: 0 0 0 -.7em;
   }
   .bubble::before {
-    background: #f9f9f9;
+    background: #f2f2f2;
     border-radius: 50% 0 0 0;
   }
   .bubble::after {
@@ -109,7 +109,7 @@
   }
   pre {
     white-space: pre-wrap;
-    margin: 1.2em 0 0.2em 0;
+    margin: 1.5em 0 0.2em 0;
   }
   .time {
     font-size: 0.75em;

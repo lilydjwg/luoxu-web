@@ -109,7 +109,7 @@
   }
   pre {
     white-space: pre-wrap;
-    margin: 2em 0 0.2em 0;
+    margin: 1.2em 0 0.2em 0;
   }
   .time {
     font-size: 0.75em;

@@ -49,9 +49,11 @@
 <div class="message">
   <img class="avatar" src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
   <div class="bubble">
-    <div class="name">{msg.from_name || ' '}</div>
-    <pre>{msg.text}</pre>
-    <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
+    <div class="message-content">
+      <div class="name">{msg.from_name || ' '}</div>
+      <pre>{msg.text}</pre>
+      <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
+    </div>
   </div>
 </div>
 
@@ -64,7 +66,7 @@
     padding: 0.5em;
     max-width: max-content;
     position: relative;
-    background: #eee;
+    background: #f9f9f9;
     border-radius: 0 5px 5px 5px;
   }
   .bubble::before, .bubble::after {
@@ -77,26 +79,37 @@
     margin: 0 0 0 -.7em;
   }
   .bubble::before {
-    background: #eee;
+    background: #f9f9f9;
     border-radius: 50% 0 0 0;
   }
   .bubble::after {
     background: #fff;
     border-radius: 0 100% 0 0;
   }
+  .message-content {
+    position: relative;
+    overflow: hidden;
+    min-width: 7em;
+  }
   .avatar {
     width: 3em;
     height: 3em;
     margin-right: 1em;
     border-radius: 10%;
+    position: sticky;
+    top: 0;
   }
   .name {
     white-space: nowrap;
     color: #1e90ff;
+    position: absolute;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
   }
   pre {
     white-space: pre-wrap;
-    margin: 0.2em 0;
+    margin: 2em 0 0.2em 0;
   }
   .time {
     font-size: 0.75em;

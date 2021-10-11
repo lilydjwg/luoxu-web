@@ -10,6 +10,7 @@
   let result
   let now = new Date()
   let loading = false
+  let need_update_title = false
 
   setContext('LUOXU_URL', LUOXU_URL)
 
@@ -29,28 +30,40 @@
     do_hash_search()
     const res = await fetch(`${LUOXU_URL}/groups`)
     groups = (await res.json()).groups
+    need_update_title = true
     if(!group) {
       group = ''
     }
   })
 
-  function update_title() {
-    let group_name
-    for(const g of groups) {
-      if(g.group_id == group) {
-        group_name = g.name
+  $: {
+    // only update title on hash change (doing a search)
+    if(need_update_title && groups) {
+      let group_name
+      for(const g of groups) {
+        if(g.group_id == group) {
+          group_name = g.name
+        }
       }
-    }
-    if(query && group_name) {
-      document.title = `搜索：${query} 于 ${group_name} - 落絮`
-    }else{
-      document.title = '落絮'
+      if(query && group_name) {
+        document.title = `搜索：${query} 于 ${group_name} - 落絮`
+      }else if(query) {
+        document.title = `搜索：${query} - 落絮`
+      }else if(group_name) {
+        document.title = `搜索 ${group_name} - 落絮`
+      }else{
+        document.title = '落絮'
+      }
+      need_update_title = false
     }
   }
 
   function do_hash_search() {
     const info = parse_hash()
     if(info) {
+      query = ''
+      group = ''
+      result = null
       if(info.has('g')) {
         group = info.get('g')|0
       }
@@ -79,7 +92,7 @@
     let url
     if(!more) {
       location.hash = `#${q}`
-      update_title()
+      need_update_title = true
       if(result) {
         result.messages = []
       }

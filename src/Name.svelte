@@ -12,8 +12,7 @@
   let url = getContext('LUOXU_URL')
   let input
   let ul
-  let has_focus = false
-  let has_mouse = false
+  let should_hide = false
 
   let abort = new AbortController()
 
@@ -22,6 +21,11 @@
     ul.style.top = `${rect.height - 1}px`
     ul.style.width = `${rect.width - 2}px`
   })
+
+  function update_list_width() {
+    const rect = input.getBoundingClientRect()
+    ul.style.width = `${rect.width - 2}px`
+  }
 
   function may_complete() {
     if(to) {
@@ -62,8 +66,10 @@
     if(el.tagName != 'LI') {
       return
     }
-    selected_idx = el.dataset.idx
+    selected_idx = el.dataset.idx|0
     select_confirmed()
+    input.focus()
+    should_hide = true
   }
 
   function select_confirmed() {
@@ -73,9 +79,12 @@
   }
 
   function update_value() {
+    if(!selected) {
+      return
+    }
     if(input.value) {
       input.value = selected_name
-    }else if(selected != null){
+    }else{
       selected = null
       selected_name = ''
     }
@@ -112,15 +121,22 @@
 // TODO: NOT operator
 </script>
 
-<div on:mouseenter={() => has_mouse=true} on:mouseleave={() => has_mouse=false}>
-  <input bind:this={input} type="text" on:input={may_complete} on:focus={() => has_focus=true} on:blur={() => {has_focus=false;update_value()}} on:keydown={select_by_key}/>
+<div>
+  <input bind:this={input} type="text"
+    on:input={() => {should_hide=false;may_complete()}}
+    on:focus={() => should_hide=false}
+    on:blur={() => {setTimeout(() => should_hide=true, 100);update_value}}
+    on:keydown={select_by_key}
+  />
   <img class="selected-avatar" alt="" src="{url}/avatar/{selected?selected:'nobody'}.jpg"/>
-  <ul bind:this={ul} on:click={select_by_click} class:hidden={names.length === 0 || (!has_focus && !has_mouse)}>
+  <ul bind:this={ul} on:click={select_by_click} class:hidden={names.length === 0 || should_hide}>
     {#each names as name, i (name)}
       <li data-idx={i} class:selected={i===selected_idx} title={name[1]}><img src="{url}/avatar/{name[0]}.jpg" alt="avatar"/>{name[1]}</li>
     {/each}
   </ul>
 </div>
+
+<svelte:window on:resize={update_list_width}/>
 
 <style>
   div {

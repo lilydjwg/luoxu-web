@@ -75,7 +75,7 @@
   function update_value() {
     if(input.value) {
       input.value = selected_name
-    }else{
+    }else if(selected != null){
       selected = null
       selected_name = ''
     }
@@ -154,6 +154,7 @@
   }
   input {
     padding-left: 2.5em;
+    width: 100%;
   }
   input, ul {
     border-radius: 0;

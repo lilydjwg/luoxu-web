@@ -208,7 +208,7 @@
   #searchbox input[type=search] {
     flex-grow: 1;
   }
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
     #searchbox {
       flex-direction: column;
     }

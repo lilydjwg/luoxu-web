@@ -125,7 +125,7 @@
   <input bind:this={input} type="text"
     on:input={() => {should_hide=false;may_complete()}}
     on:focus={() => should_hide=false}
-    on:blur={() => {setTimeout(() => should_hide=true, 100);update_value}}
+    on:blur={() => {setTimeout(() => should_hide=true, 100);update_value()}}
     on:keydown={select_by_key}
   />
   <img class="selected-avatar" alt="" src="{url}/avatar/{selected?selected:'nobody'}.jpg"/>

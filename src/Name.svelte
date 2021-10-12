@@ -54,16 +54,6 @@
     }
   }
 
-  $: {
-    if(ul) {
-      if(names.length === 0 || (!has_focus && !has_mouse)) {
-        ul.style.display = 'none'
-      }else{
-        ul.style.display = 'block'
-      }
-    }
-  }
-
   function select_by_click(e) {
     let el = e.target
     if(el.tagName == 'IMG') {
@@ -125,7 +115,7 @@
 <div on:mouseenter={() => has_mouse=true} on:mouseleave={() => has_mouse=false}>
   <input bind:this={input} type="text" on:input={may_complete} on:focus={() => has_focus=true} on:blur={() => {has_focus=false;update_value()}} on:keydown={select_by_key}/>
   <img class="selected-avatar" alt="" src="{url}/avatar/{selected?selected:'nobody'}.jpg"/>
-  <ul bind:this={ul} on:click={select_by_click}>
+  <ul bind:this={ul} on:click={select_by_click} class:hidden={names.length === 0 || (!has_focus && !has_mouse)}>
     {#each names as name, i (name)}
       <li data-idx={i} class:selected={i===selected_idx} title={name[1]}><img src="{url}/avatar/{name[0]}.jpg" alt="avatar"/>{name[1]}</li>
     {/each}
@@ -142,7 +132,6 @@
     margin: 0;
     position: absolute;
     left: 0;
-    display: none;
     background-color: white;
     box-shadow: 0 0 4px var(--color-inactive);
     clip-path: polygon(-100% 0, 200% 0, 200% 200%, -100% 200%);
@@ -184,5 +173,8 @@
     left: 1px;
     height: calc(2.3em - 2px);
     width: calc(2.3em - 2px);
+  }
+  .hidden {
+    display: none;
   }
 </style>

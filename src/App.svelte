@@ -2,6 +2,7 @@
   import { onMount, setContext } from 'svelte'
   import Message from './Message.svelte'
   import Name from './Name.svelte'
+  import { sleep } from './util.js'
 
   const LUOXU_URL = 'https://lab.lilydjwg.me/luoxu'
   let groups = []
@@ -30,11 +31,19 @@
 
   onMount(async () => {
     do_hash_search()
-    const res = await fetch(`${LUOXU_URL}/groups`)
-    groups = (await res.json()).groups
-    need_update_title = true
-    if(!group) {
-      group = ''
+    while(true) {
+      try{
+        const res = await fetch(`${LUOXU_URL}/groups`)
+        groups = (await res.json()).groups
+        need_update_title = true
+        if(!group) {
+          group = ''
+        }
+        break
+      }catch(e){
+        console.error('failed to fetch group info, will retry', e)
+        await sleep(1000)
+      }
     }
   })
 

@@ -98,8 +98,11 @@
       return
     }
     error = ''
-    console.log(`searching ${query} for group ${group}, older than ${more}`)
-    const q = `g=${group}&q=${encodeURIComponent(query)}`
+    console.log(`searching ${query} for group ${group}, older than ${more}, from ${sender}`)
+    let q = `g=${group}&q=${encodeURIComponent(query)}`
+    if(sender) {
+      q += `&sender=${sender}`
+    }
     let url
     if(!more) {
       location.hash = `#${q}`
@@ -164,7 +167,7 @@
       on:input={() => error = ''}
       on:keydown={e => {if(e.key == 'Enter'){do_search()}}}
     />
-    <Name group={group} selected={sender}/>
+    <Name group={group} bind:selected={sender}/>
     <button on:click={() => do_search()}>搜索</button>
   </div>
 

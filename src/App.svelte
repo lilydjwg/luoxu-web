@@ -1,6 +1,7 @@
 <script>
   import { onMount, setContext } from 'svelte'
   import Message from './Message.svelte'
+  import Name from './Name.svelte'
 
   const LUOXU_URL = 'https://lab.lilydjwg.me/luoxu'
   let groups = []
@@ -11,6 +12,7 @@
   let now = new Date()
   let loading = false
   let need_update_title = false
+  let sender
 
   setContext('LUOXU_URL', LUOXU_URL)
 
@@ -153,6 +155,7 @@
       on:input={() => error = ''}
       on:keydown={e => {if(e.key == 'Enter'){do_search()}}}
     />
+    <Name group={group} selected={sender}/>
     <button on:click={() => do_search()}>搜索</button>
   </div>
 
@@ -215,5 +218,19 @@
   .info > p {
     border: 1px #bfbfbf solid;
     border-radius: 2em;
+  }
+
+  :global(input), :global(button), :global(select) {
+    border-radius: 0;
+    border: 1px solid var(--color-inactive);
+    height: 2.3em;
+  }
+  :global(input:focus), :global(button:focus), :global(select:focus) {
+    border-color: var(--color-active);
+    outline: 1px solid var(--color-active);
+  }
+  :global(:root) {
+    --color-inactive: #bfbfbf;
+    --color-active: #add8e6;
   }
 </style>

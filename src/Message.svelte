@@ -50,7 +50,7 @@
   <img src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
   <div>
     <div class="name">{msg.from_name || ' '}</div>
-    <pre>{msg.text}</pre>
+    <div class="text">{@html msg.html}</div>
     <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
   </div>
 </div>
@@ -72,9 +72,12 @@
     white-space: nowrap;
     color: #1e90ff;
   }
-  pre {
+  .text {
     white-space: pre-wrap;
     margin: 0.2em 0;
+  }
+  .text >:global(.keyword) {
+    background-color: #ffffab;
   }
   .time {
     font-size: 0.75em;

@@ -5,6 +5,7 @@
   import { sleep } from './util.js'
 
   const LUOXU_URL = 'https://lab.lilydjwg.me/luoxu'
+  const islocal = LUOXU_URL.indexOf('http://localhost') === 0
   let groups = []
   let group
   let query
@@ -20,12 +21,7 @@
   function parse_hash() {
     const hash = location.hash
     if(hash) {
-      const info = new Map()
-      for(const pair of hash.substring(1).split('&')){
-        const [key, value] = pair.split('=')
-        info.set(key, decodeURIComponent(value))
-      }
-      return info
+      return new URLSearchParams(hash.substring(1))
     }
   }
 
@@ -81,7 +77,10 @@
       if(info.has('q')) {
         query = info.get('q')
       }
-      if(group && query) {
+      if(info.has('sender')) {
+        sender = info.get('sender')
+      }
+      if((group || islocal) && query) {
         result = null
         do_search()
       }
@@ -89,28 +88,35 @@
   }
 
   async function do_search(more) {
-    if(!group) {
+    if(!group && !islocal) {
       error = '请选择要搜索的群组'
       return
     }
-    if(!query) {
+    if(!query && !islocal) {
       error = '请输入搜索关键字'
       return
     }
     error = ''
     console.log(`searching ${query} for group ${group}, older than ${more}, from ${sender}`)
-    let q = `g=${group}&q=${encodeURIComponent(query)}`
+    const q = new URLSearchParams()
+    if(group) {
+      q.append('g', group)
+    }
+    if(query) {
+      q.append('q', query)
+    }
     if(sender) {
-      q += `&sender=${sender}`
+      q.append('sender', sender)
     }
     let url
+    const qstr = q.toString()
     if(!more) {
-      location.hash = `#${q}`
+      location.hash = `#${qstr}`
       need_update_title = true
       if(result) {
         result.messages = []
       }
-      url = `${LUOXU_URL}/search?${q}`
+      url = `${LUOXU_URL}/search?${qstr}`
     }else{
       url = `${LUOXU_URL}/search?${q}&end=${more}`
     }
@@ -173,7 +179,7 @@
 
   {#if result}
     {#each result.messages as message}
-      <Message msg={message} group={result.group_pub_id} now={now} />
+      <Message msg={message} groupinfo={result.groupinfo} now={now} />
     {/each}
   {/if}
 

@@ -2,7 +2,7 @@
   import { onMount, getContext } from 'svelte'
 
   export let msg
-  export let group
+  export let groupinfo
   export let now
 
   const formatter = new Intl.DateTimeFormat(undefined, {
@@ -16,6 +16,7 @@
   let title = format_dt(dt) + (edited ? `\n最后编辑于：${format_dt(edited)}` : '')
   let relative_dt = format_relative_time(dt, now)
   let iso_date = dt.toISOString()
+  let msgurl = groupinfo[msg.group_id][0] ? `tg://resolve?domain=${groupinfo[msg.group_id][0]}&post=${msg.id}` : `tg://privatepost?channel=${msg.group_id}&post=${msg.id}`
 
   function format_relative_time(d1, d2) {
     // in miliseconds
@@ -51,7 +52,7 @@
   <div>
     <div class="name">{msg.from_name || ' '}</div>
     <div class="text">{@html msg.html}</div>
-    <div class="time"><a href="tg://resolve?domain={group}&post={msg.id}"><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
+    <div class="time">{groupinfo[msg.group_id][1]} <a href={msgurl}><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
   </div>
 </div>
 
@@ -83,7 +84,7 @@
     font-size: 0.75em;
     float: right;
   }
-  .time > a {
+  .time, .time > a {
     color: gray;
   }
 </style>

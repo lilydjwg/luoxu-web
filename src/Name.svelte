@@ -37,7 +37,7 @@
   }
 
   async function complete_it() {
-    if(!group || !input.value) {
+    if(!input.value) {
       return
     }
     abort.abort()

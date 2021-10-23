@@ -164,6 +164,9 @@
       </select>
     {:else}
       <select bind:value={group} on:change={on_group_change}>
+        {#if islocal}
+          <option value="">全部</option>
+        {/if}
         {#each groups as group}
           <option value={group.group_id}>{group.name}</option>
         {/each}

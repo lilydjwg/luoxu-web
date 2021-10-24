@@ -16,6 +16,7 @@
   let need_update_title = false
   let sender
   let selected_init
+  let our_hash_change = false
 
   setContext('LUOXU_URL', LUOXU_URL)
 
@@ -99,6 +100,7 @@
       return
     }
     error = ''
+    our_hash_change = true
     console.log(`searching ${query} for group ${group}, older than ${more}, from ${sender}`)
     const q = new URLSearchParams()
     if(group) {
@@ -138,6 +140,7 @@
       error = e
       loading = false
     }
+    our_hash_change = false;
   }
 
   async function on_group_change() {
@@ -156,7 +159,7 @@
   }
 </script>
 
-<svelte:window on:hashchange={do_hash_search}/>
+<svelte:window on:hashchange={() => {if(!our_hash_change) do_hash_search()}}/>
 
 <main>
   <div id="searchbox">

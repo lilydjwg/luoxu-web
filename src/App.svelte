@@ -15,6 +15,7 @@
   let loading = false
   let need_update_title = false
   let sender
+  let selected_init
 
   setContext('LUOXU_URL', LUOXU_URL)
 
@@ -79,6 +80,7 @@
       }
       if(info.has('sender')) {
         sender = info.get('sender')
+        selected_init = sender
       }
       if((group || islocal) && query) {
         result = null
@@ -176,7 +178,7 @@
       on:input={() => error = ''}
       on:keydown={e => {if(e.key == 'Enter'){do_search()}}}
     />
-    <Name group={group} bind:selected={sender}/>
+    <Name group={group} bind:selected={sender} selected_init={selected_init}/>
     <button on:click={() => do_search()}>搜索</button>
   </div>
 

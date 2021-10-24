@@ -4,6 +4,7 @@
   export let group
 
   export let selected
+  export let selected_init
   let selected_name = ''
   let selected_idx
 
@@ -76,16 +77,17 @@
     selected = names[selected_idx][0]
     selected_name = names[selected_idx][1]
     input.value = selected_name
+    selected_init = null
   }
 
   function update_value() {
-    if(!selected) {
+    if(!selected || selected === selected_init) {
       return
     }
     if(input.value) {
       input.value = selected_name
     }else{
-      selected = null
+      selected = selected_init
       selected_name = ''
     }
   }
@@ -118,7 +120,7 @@
       }
     }
   }
-// TODO: NOT operator
+
 </script>
 
 <div>

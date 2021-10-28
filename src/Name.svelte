@@ -166,6 +166,9 @@
     width: calc(2.3em - 2px);
     vertical-align: middle;
     padding-right: 0.5em;
+    /* for alt text */
+    display: inline-block;
+    overflow: hidden;
   }
   ul:not(:hover) > li.selected, li:hover {
     background-color: #d9f5ff;

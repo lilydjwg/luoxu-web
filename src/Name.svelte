@@ -128,11 +128,11 @@
   <input bind:this={input} type="text"
     on:input={() => {should_hide=false;may_complete()}}
     on:focus={() => should_hide=false}
-    on:blur={() => {setTimeout(() => should_hide=true, 500);update_value()}}
+    on:blur={() => {should_hide=true;update_value()}}
     on:keydown={select_by_key}
   />
   <img class="selected-avatar" alt="" src="{url}/avatar/{selected?selected:'nobody'}.jpg"/>
-  <ul bind:this={ul} on:click={select_by_click} class:hidden={names.length === 0 || should_hide}>
+  <ul bind:this={ul} on:click={select_by_click} on:mousedown|preventDefault={()=>{}} class:hidden={names.length === 0 || should_hide}>
     {#each names as name, i (name)}
       <li data-idx={i} class:selected={i===selected_idx} title={name[1]}><img src="{url}/avatar/{name[0]}.jpg" alt="avatar"/>{name[1]}</li>
     {/each}
@@ -192,6 +192,7 @@
   }
   .selected-avatar {
     position: absolute;
+    pointer-events: none;
     top: 1px;
     left: 1px;
     height: calc(2.3em - 2px);

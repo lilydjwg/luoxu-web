@@ -189,6 +189,18 @@
     {#each result.messages as message}
       <Message msg={message} groupinfo={result.groupinfo} now={now} />
     {/each}
+  {:else if !loading && !error}
+    <div>
+      <p>搜索消息时，搜索字符串不区分简繁（会使用 OpenCC 自动转换），也不进行分词（请手动将可能不连在一起的词语以空格分开）。</p>
+      <p>搜索字符串支持以下功能：</p>
+      <ul>
+        <li>以空格分开的多个搜索词是「与」的关系</li>
+        <li>使用 OR（全大写）来表达「或」条件</li>
+        <li>使用 - 来表达排除，如 落絮 - 测试</li>
+        <li>使用小括号来分组</li>
+      </ul>
+      <p>人名补全支持上下方向键和 Alt+N/P 进行选择。</p>
+    </div>
   {/if}
 
   {#if loading}

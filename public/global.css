@@ -5,11 +5,13 @@ html, body {
 }
 
 body {
-	color: #333;
-	margin: 0;
-	padding: 8px;
-	box-sizing: border-box;
-        line-height: 1.2;
+  color: #333;
+  margin: 0;
+  padding: 8px;
+  box-sizing: border-box;
+  line-height: 1.2;
+  /* Google Chrome defaults to Times New Roman and for sans-serif it prefers Arial... */
+  font-family: 'DejaVu Sans', sans-serif;
 }
 
 a {

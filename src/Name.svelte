@@ -41,6 +41,7 @@
     if(!input.value) {
       return
     }
+    selected_idx = null
     abort.abort()
     abort = new AbortController()
     try{

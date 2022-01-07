@@ -48,8 +48,8 @@
 </script>
 
 <div class="message">
-  <img src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
-  <div>
+  <img class="avatar" src="{getContext('LUOXU_URL')}/avatar/{msg.from_id}.jpg" height="64" width="64" alt="{msg.from_name} 的头像"/>
+  <div class="content">
     <div class="name">{msg.from_name || ' '}</div>
     <div class="text">{@html msg.html}</div>
     <div class="time">{groupinfo[msg.group_id][1]} <a href={msgurl}><time datetime={iso_date} title={title}>{relative_dt}</time></a></div>
@@ -66,12 +66,17 @@
     border-radius: 5px;
     display: flex;
   }
-  img {
+  .avatar {
     padding-right: 0.5em;
+  }
+  .content {
+    overflow: hidden;
   }
   .name {
     white-space: nowrap;
     color: #1e90ff;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .text {
     white-space: pre-wrap;

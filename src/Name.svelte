@@ -1,18 +1,18 @@
-<script>
+<script lang="ts">
   import { onMount, getContext } from "svelte";
 
-  export let group;
+  export let group: any;
 
-  export let selected;
-  export let selected_init;
+  export let selected: any;
+  export let selected_init: any;
   let selected_name = "";
-  let selected_idx;
+  let selected_idx: number;
 
-  let to;
+  let to: string | number | NodeJS.Timeout;
   let names = [];
   let url = getContext("LUOXU_URL");
-  let input;
-  let ul;
+  let input: HTMLInputElement;
+  let ul: HTMLUListElement;
   let should_hide = false;
 
   let abort = new AbortController();
@@ -49,7 +49,7 @@
         signal: abort.signal,
       });
       const j = await res.json();
-      if (!abort.aborted) {
+      if (!abort.signal.aborted) {
         // only update if we're current
         names = j.names;
       }
@@ -61,7 +61,7 @@
     }
   }
 
-  function select_by_click(e) {
+  function select_by_click(e: any) {
     let el = e.target;
     if (el.tagName === "IMG") {
       el = el.parentNode;
@@ -94,7 +94,7 @@
     }
   }
 
-  function select_by_key(e) {
+  function select_by_key(e: KeyboardEvent) {
     if (e.key === "ArrowDown" || (e.key === "n" && e.altKey)) {
       select_next(1);
       e.preventDefault();
@@ -107,7 +107,7 @@
     }
   }
 
-  function select_next(dir) {
+  function select_next(dir: number) {
     if (typeof selected_idx === "number") {
       if (dir > 0) {
         selected_idx = (selected_idx + 1) % names.length;

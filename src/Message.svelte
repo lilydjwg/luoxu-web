@@ -1,16 +1,16 @@
-<script>
+<script lang="ts">
   import { onMount, getContext } from "svelte";
 
-  export let msg;
-  export let groupinfo;
-  export let now;
+  export let msg: any;
+  export let groupinfo: any;
+  export let now: any;
 
   const formatter = new Intl.DateTimeFormat(undefined, {
     timeStyle: "full",
     dateStyle: "full",
     hour12: false,
   });
-
+  const format_dt = formatter.format;
   let dt = new Date(msg.t * 1000);
   let edited = msg.edited ? new Date(msg.edited * 1000) : null;
   let title =
@@ -21,7 +21,7 @@
     ? `tg://resolve?domain=${groupinfo[msg.group_id][0]}&post=${msg.id}`
     : `tg://privatepost?channel=${msg.group_id}&post=${msg.id}`;
 
-  function format_relative_time(d1, d2) {
+  function format_relative_time(d1: Date, d2: Date) {
     // in miliseconds
     const units = {
       year: 24 * 60 * 60 * 1000 * 365,
@@ -33,18 +33,15 @@
     };
 
     const rtf = new Intl.RelativeTimeFormat();
+    //@ts-ignore
+    const elapsed = d1 - d2; //https://stackoverflow.com/a/4944782/13040423
 
-    const elapsed = d1 - d2;
-
-    for (const u in units) {
-      if (Math.abs(elapsed) > units[u] || u === "second") {
-        return rtf.format(Math.round(elapsed / units[u]), u);
+    for (const [u, period] of Object.entries(units)) {
+      if (Math.abs(elapsed) > period || u === "second") {
+        //@ts-ignore
+        return rtf.format(Math.round(elapsed / period), u);
       }
     }
-  }
-
-  function format_dt(t) {
-    return formatter.format(t);
   }
 </script>
 

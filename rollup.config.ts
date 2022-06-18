@@ -20,8 +20,8 @@ function serve() {
 		writeBundle() {
 			if (server) return;
 			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-                                // stdio: ['ignore', 'inherit', 'inherit'],
-                                // shell: true
+				// stdio: ['ignore', 'inherit', 'inherit'],
+				// shell: true
 			});
 
 			process.on('SIGTERM', toExit);
@@ -61,7 +61,8 @@ export default {
 		}),
 		commonjs(),
 		typescript({
-			sourceMap: !production,
+			sourceMap: true,
+			//sourceMap: !production,
 			inlineSources: !production
 		}),
 
@@ -78,7 +79,7 @@ export default {
 		production && terser()
 	],
 	watch: {
-                buildDelay: 500,
+		buildDelay: 500,
 		clearScreen: false
 	}
 };

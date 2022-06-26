@@ -74,7 +74,7 @@
       group = "";
       result = null;
       if (info.has("g")) {
-        group = (parseFloat(info.get("g")) | 0).toString();
+        group = info.get("g");
       }
       if (info.has("q")) {
         query = info.get("q");

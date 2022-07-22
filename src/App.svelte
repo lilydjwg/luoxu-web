@@ -17,6 +17,7 @@
   let sender: string;
   let selected_init: string;
   let our_hash_change = false;
+  let abort = new AbortController();
 
   setContext("LUOXU_URL", LUOXU_URL);
 
@@ -91,6 +92,8 @@
   }
 
   async function do_search(more?: any) {
+    abort.abort();
+    abort = new AbortController();
     if (!group && !islocal) {
       error = "请选择要搜索的群组";
       return;
@@ -130,9 +133,12 @@
     now = new Date();
     loading = true;
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, {signal: abort.signal});
       const r = await res.json();
       loading = false;
+      if (abort.signal.aborted) {
+        return [];
+      }
       if (more) {
         return r;
       } else {

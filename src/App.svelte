@@ -257,6 +257,11 @@
 
   #searchbox {
     display: flex;
+    margin-left: 1px;
+  }
+  #searchbox > :global(*) {
+    /* make borders collapse */
+    margin-left: -1px;
   }
   #searchbox input[type="search"] {
     flex-grow: 1;
@@ -297,6 +302,8 @@
   :global(select:focus) {
     border-color: var(--color-active);
     outline: 1px solid var(--color-active);
+    /* make focus border topmost */
+    z-index: 10;
   }
   :global(:root) {
     --color-inactive: #bfbfbf;

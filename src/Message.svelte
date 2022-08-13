@@ -96,6 +96,8 @@
   .time {
     font-size: 0.75em;
     float: right;
+    /* make room for outline */
+    margin-right: 2px;
   }
   .time,
   .time > a {

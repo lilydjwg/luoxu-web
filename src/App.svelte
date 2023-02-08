@@ -212,7 +212,7 @@
       }}
     />
     <Name {group} bind:selected={sender} {selected_init} />
-    <button on:click={do_search}>搜索</button>
+    <button on:click={() => do_search()}>搜索</button>
   </div>
 
   {#if result}

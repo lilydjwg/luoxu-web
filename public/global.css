@@ -12,6 +12,12 @@ body {
   line-height: 1.2;
   /* Google Chrome defaults to Times New Roman and for sans-serif it prefers Arial... */
   font-family: 'DejaVu Sans', sans-serif;
+  /*
+   * Make content stable wrt scrollbars
+   * scrollbar-gutter doesn't help because width isn't fixed
+   * https://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/ */
+  margin-left: calc(100vw - 100%);
+  overflow-x: hidden;
 }
 
 a {

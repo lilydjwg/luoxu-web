@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount, getContext } from "svelte";
 
-  export let group: any;
+  export let group: string;
 
-  export let selected: any;
-  export let selected_init: any;
+  export let selected: string;
+  export let selected_init: string;
   let selected_name = "";
   let selected_idx: number;
 
-  let to: string | number | NodeJS.Timeout;
+  let to: NodeJS.Timeout;
   let names = [];
   let url = getContext("LUOXU_URL");
   let input: HTMLInputElement;
@@ -61,15 +61,15 @@
     }
   }
 
-  function select_by_click(e: any) {
-    let el = e.target;
+  function select_by_click(e: MouseEvent) {
+    let el = e.target as HTMLElement;
     if (el.tagName === "IMG") {
-      el = el.parentNode;
+      el = el.parentNode as HTMLElement;
     }
     if (el.tagName != "LI") {
       return;
     }
-    selected_idx = el.dataset.idx | 0;
+    selected_idx = parseInt(el.dataset.idx);
     select_confirmed();
     input.focus();
     should_hide = true;
@@ -144,17 +144,17 @@
     alt=""
     src="{url}/avatar/{selected ? selected : 'nobody'}.jpg"
   />
-  <ul
-    bind:this={ul}
-    on:click={select_by_click}
-    on:mousedown|preventDefault={() => {}}
-    class:hidden={names.length === 0 || should_hide}
-  >
-    {#each names as name, i (name)}
-      <li data-idx={i} class:selected={i === selected_idx} title={name[1]}>
-        <img src="{url}/avatar/{name[0]}.jpg" alt="avatar" />{name[1]}
-      </li>
-    {/each}
+  <ul bind:this={ul}>
+    <button
+      on:click={select_by_click}
+      on:mousedown|preventDefault={() => {}}
+      class:hidden={names.length === 0 || should_hide}
+      >{#each names as name, i (name)}
+        <li data-idx={i} class:selected={i === selected_idx} title={name[1]}>
+          <img src="{url}/avatar/{name[0]}.jpg" alt="avatar" />{name[1]}
+        </li>
+      {/each}
+    </button>
   </ul>
 </div>
 

@@ -6,11 +6,23 @@
 
   const LUOXU_URL = "https://lab.lilydjwg.me/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");
-  let groups = [];
+  let groups: { group_id: string; name: string }[] = [];
   let group: string;
   let query: string;
   let error: string;
-  let result: { messages: string | any[]; has_more: any; groupinfo: any };
+  let result: {
+    messages: {
+      from_name: string;
+      t;
+      edited;
+      group_id: string;
+      id: string;
+      from_id: string;
+      html: string;
+    }[];
+    has_more: boolean;
+    groupinfo: string[][];
+  };
   let now = new Date();
   let loading = false;
   let need_update_title = false;
@@ -49,7 +61,7 @@
   $: {
     // only update title on hash change (doing a search)
     if (need_update_title && groups) {
-      let group_name: any;
+      let group_name: string;
       for (const g of groups) {
         if (g.group_id === group) {
           group_name = g.name;
@@ -91,7 +103,7 @@
     }
   }
 
-  async function do_search(more?: any) {
+  async function do_search(more?: HTMLMouseEventHandler<HTMLButtonElement>) {
     abort.abort();
     abort = new AbortController();
     if (!group && !islocal) {
@@ -133,7 +145,7 @@
     now = new Date();
     loading = true;
     try {
-      const res = await fetch(url, {signal: abort.signal});
+      const res = await fetch(url, { signal: abort.signal });
       const r = await res.json();
       loading = false;
       if (abort.signal.aborted) {
@@ -200,7 +212,7 @@
       }}
     />
     <Name {group} bind:selected={sender} {selected_init} />
-    <button on:click={() => do_search()}>搜索</button>
+    <button on:click={do_search}>搜索</button>
   </div>
 
   {#if result}

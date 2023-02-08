@@ -13,8 +13,8 @@
   let result: {
     messages: {
       from_name: string;
-      t;
-      edited;
+      t: any;
+      edited: any;
       group_id: string;
       id: string;
       from_id: string;
@@ -103,7 +103,7 @@
     }
   }
 
-  async function do_search(more?: HTMLMouseEventHandler<HTMLButtonElement>) {
+  async function do_search(more?: any) {
     abort.abort();
     abort = new AbortController();
     if (!group && !islocal) {

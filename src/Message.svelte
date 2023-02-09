@@ -1,9 +1,17 @@
 <script lang="ts">
   import { onMount, getContext } from "svelte";
 
-  export let msg: any;
-  export let groupinfo: any;
-  export let now: any;
+  export let msg: {
+    from_name: string;
+    t;
+    edited;
+    group_id: string;
+    id: string;
+    from_id: string;
+    html: string;
+  };
+  export let groupinfo: string[][];
+  export let now: Date;
 
   const formatter = new Intl.DateTimeFormat(undefined, {
     timeStyle: "full",
@@ -33,13 +41,16 @@
     };
 
     const rtf = new Intl.RelativeTimeFormat();
-    //@ts-ignore
-    const elapsed = d1 - d2; //https://stackoverflow.com/a/4944782/13040423
+    // https://stackoverflow.com/a/60688789
+    const elapsed = d1.valueOf() - d2.valueOf();
 
     for (const [u, period] of Object.entries(units)) {
       if (Math.abs(elapsed) > period || u === "second") {
-        //@ts-ignore
-        return rtf.format(Math.round(elapsed / period), u);
+        // https://stackoverflow.com/a/64972112
+        return rtf.format(
+          Math.round(elapsed / period),
+          u as Intl.RelativeTimeFormatUnit
+        );
       }
     }
   }

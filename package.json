@@ -9,21 +9,21 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@jridgewell/sourcemap-codec": "^1.4.14",
+    "@jridgewell/sourcemap-codec": "^1.4.15",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-terser": "^0.4.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^2.0.1",
-    "rollup": "^2.3.4",
+    "rollup": "^2.79.1",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-svelte": "^7.0.0",
-    "svelte": "^3.56.0",
-    "svelte-check": "^2.0.0",
-    "svelte-preprocess": "^4.0.0",
+    "rollup-plugin-svelte": "^7.1.5",
+    "svelte": "^4.0.0",
+    "svelte-check": "^3.4.3",
+    "svelte-preprocess": "^5.0.3",
     "tslib": "^2.0.0",
-    "typescript": "^4.0.0"
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0"

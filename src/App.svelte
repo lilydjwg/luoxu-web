@@ -3,6 +3,7 @@
   import Message from "./Message.svelte";
   import Name from "./Name.svelte";
   import { sleep } from "./util.js";
+  import "./global.css";
 
   const LUOXU_URL = "https://lab.lilydjwg.me/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");

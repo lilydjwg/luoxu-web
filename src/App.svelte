@@ -104,64 +104,72 @@
     }
   }
 
+  let concurrency = 0;
   async function do_search(more?: any) {
-    abort.abort();
-    abort = new AbortController();
-    if (!group && !islocal) {
-      error = "请选择要搜索的群组";
-      return;
-    }
-    if (!query && !islocal) {
-      error = "请输入搜索关键字";
-      return;
-    }
-    error = "";
-    our_hash_change = true;
-    console.log(
-      `searching ${query} for group ${group}, older than ${more}, from ${sender}`
-    );
-    const q = new URLSearchParams();
-    if (group) {
-      q.append("g", group);
-    }
-    if (query) {
-      q.append("q", query);
-    }
-    if (sender) {
-      q.append("sender", sender);
-    }
-    let url: RequestInfo | URL;
-    const qstr = q.toString();
-    if (!more) {
-      location.hash = `#${qstr}`;
-      need_update_title = true;
-      if (result) {
-        result.messages = [];
-      }
-      url = `${LUOXU_URL}/search?${qstr}`;
-    } else {
-      url = `${LUOXU_URL}/search?${q}&end=${more}`;
-    }
-
-    now = new Date();
-    loading = true;
+    concurrency += 1;
     try {
-      const res = await fetch(url, { signal: abort.signal });
-      const r = await res.json();
-      loading = false;
-      if (abort.signal.aborted) {
-        return [];
+      abort.abort();
+      abort = new AbortController();
+      if (!group && !islocal) {
+        error = "请选择要搜索的群组";
+        return;
       }
-      if (more) {
-        return r;
+      if (!query && !islocal) {
+        error = "请输入搜索关键字";
+        return;
+      }
+      error = "";
+      our_hash_change = true;
+      console.log(
+        `searching ${query} for group ${group}, older than ${more}, from ${sender}`,
+      );
+      const q = new URLSearchParams();
+      if (group) {
+        q.append("g", group);
+      }
+      if (query) {
+        q.append("q", query);
+      }
+      if (sender) {
+        q.append("sender", sender);
+      }
+      let url: RequestInfo | URL;
+      const qstr = q.toString();
+      if (!more) {
+        location.hash = `#${qstr}`;
+        need_update_title = true;
+        if (result) {
+          result.messages = [];
+        }
+        url = `${LUOXU_URL}/search?${qstr}`;
       } else {
-        result = r;
+        url = `${LUOXU_URL}/search?${q}&end=${more}`;
       }
-    } catch (e) {
-      error = e;
-      loading = false;
+
+      now = new Date();
+      loading = true;
+      try {
+        const res = await fetch(url, { signal: abort.signal });
+        const r = await res.json();
+        loading = false;
+        if (abort.signal.aborted) {
+          return [];
+        }
+        if (more) {
+          return r;
+        } else {
+          result = r;
+        }
+      } catch (e) {
+        if (concurrency <= 1) {
+          error = e;
+          loading = false;
+        }
+      }
+      our_hash_change = false;
+    } finally {
+      concurrency -= 1;
     }
-    our_hash_change = false;
   }
 
   async function on_group_change() {

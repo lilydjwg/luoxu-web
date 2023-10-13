@@ -114,7 +114,7 @@
         error = "请选择要搜索的群组";
         return;
       }
-      if (!query && !islocal) {
+      if (!query && !islocal && !sender) {
         error = "请输入搜索关键字";
         return;
       }

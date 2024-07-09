@@ -100,6 +100,8 @@
   .text {
     white-space: pre-wrap;
     margin: 0.2em 0;
+    max-height: 20.5em;
+    overflow-x: auto;
   }
   .text > :global(.keyword) {
     background-color: #ffffab;

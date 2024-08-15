@@ -1,6 +1,8 @@
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /app
+
+ENV VITE_LUOXU_URL="http://127.0.0.1:9008"
 
 COPY package*.json ./
 
@@ -8,14 +10,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
-FROM nginx:alpine
+EXPOSE 3000
 
-LABEL org.opencontainers.image.source=https://github.com/seele0oo/luoxu-web
-
-COPY --from=build /app/public /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "serve"]

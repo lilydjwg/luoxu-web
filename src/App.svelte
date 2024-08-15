@@ -5,7 +5,7 @@
   import { sleep } from "./util.js";
   import "./global.css";
 
-  const LUOXU_URL = "https://lab.lilydjwg.me/luoxu";
+  const LUOXU_URL = import.meta.env.VITE_LUOXU_URL || "https://lab.lilydjwg.me/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");
   let groups: { group_id: string; name: string }[] = [];
   let group: string;

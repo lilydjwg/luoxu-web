@@ -80,8 +80,8 @@
     margin: 1em 0;
     padding: 0.5em;
     max-width: max-content;
-    border: 1px #eeeeee solid;
-    box-shadow: 0 0 3px gray;
+    border: 1px solid var(--color-msg-border);
+    box-shadow: 0 0 3px var(--color-shadow);
     border-radius: 5px;
     display: flex;
   }
@@ -93,7 +93,7 @@
   }
   .name {
     white-space: nowrap;
-    color: #1e90ff;
+    color: var(--color-username);
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -102,7 +102,7 @@
     margin: 0.2em 0;
   }
   .text > :global(.keyword) {
-    background-color: #ffffab;
+    background-color: var(--color-keyword-bg);
   }
   .time {
     font-size: 0.75em;
@@ -112,6 +112,6 @@
   }
   .time,
   .time > a {
-    color: gray;
+    color: var(--color-text-dim);
   }
 </style>

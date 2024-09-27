@@ -171,7 +171,7 @@
     margin: 0;
     position: absolute;
     left: 0;
-    background-color: white;
+    background-color: var(--color-bg);
     box-shadow: 0 0 4px var(--color-inactive);
     clip-path: polygon(-100% 0, 200% 0, 200% 200%, -100% 200%);
   }
@@ -193,7 +193,7 @@
   }
   ul:not(:hover) > li.selected,
   li:hover {
-    background-color: #d9f5ff;
+    background-color: var(--color-hover);
   }
   input {
     padding-left: 2.5em;
@@ -202,7 +202,7 @@
   input,
   ul {
     border-radius: 0;
-    border: 1px solid var(--color-inactive);
+    border: 1px solid var(--color-border);
   }
   input:focus,
   input:focus ~ ul {
@@ -211,7 +211,7 @@
     outline: 1px solid var(--color-active);
   }
   input:focus ~ ul {
-    border-top-color: var(--color-inactive);
+    border-top-color: var(--color-border);
   }
   .selected-avatar {
     position: absolute;

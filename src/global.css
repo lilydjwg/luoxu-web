@@ -1,3 +1,36 @@
+html {
+  --color-bg: #fff;
+  --color-text: #333;
+  --color-text-dim: #808080;
+  --color-border: #bfbfbf;
+  --color-active: #add8e6;
+  --color-hover: #d9f5ff;
+  --color-error: #f00;
+  --color-btn-bg: #f4f4f4;
+  --color-btn-active-bg: #ddd;
+  --color-msg-border: #eeeeee;
+  --color-keyword-bg: #ffffab;
+  --color-username: #1e90ff;
+  --color-shadow: #808080;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --color-bg: #1b1b1b;
+    --color-text: #eee;
+    --color-text-dim: #999999;
+    --color-border: #646464;
+    --color-active: #5d8894;
+    --color-hover: #374b53;
+    --color-error: #cc0000;
+    --color-btn-bg: #444;
+    --color-btn-active-bg: #222;
+    --color-msg-border: #646464;
+    --color-keyword-bg: #6b6707;
+    --color-username: #60c0ff;
+  }
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -5,7 +38,8 @@ html, body {
 }
 
 body {
-  color: #333;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   margin: 0;
   padding: 8px;
   box-sizing: border-box;
@@ -21,7 +55,6 @@ body {
 }
 
 a {
-	color: rgb(0,100,200);
 	text-decoration: none;
 }
 
@@ -29,43 +62,40 @@ a:hover {
 	text-decoration: underline;
 }
 
-a:visited {
-	color: rgb(0,80,160);
-}
-
-label {
-	display: block;
-}
-
 input, button, select, textarea {
+  color: var(--color-text);
 	font-family: inherit;
 	font-size: inherit;
-	-webkit-padding: 0.4em 0;
 	padding: 0.4em;
-	margin: 0 0 0.5em 0;
 	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
+	border: 1px solid var(--color-border);
 }
 
-input:disabled {
-	color: #ccc;
+input, textarea {
+  background-color: var(--color-bg);
 }
 
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:disabled {
-	color: #999;
+select, button {
+  outline: none;
+	background-color: var(--color-btn-bg);
 }
 
 button:not(:disabled):active {
-	background-color: #ddd;
+	background-color: var(--color-btn-active-bg);
 }
 
-button:focus {
-	border-color: #666;
+input,
+button,
+select {
+  border: 1px solid var(--color-border);
+  height: 2.3em;
+}
+
+input:focus,
+button:focus,
+select:focus {
+  border-color: var(--color-active);
+  outline: 1px solid var(--color-active);
+  /* make focus border topmost */
+  z-index: 10;
 }

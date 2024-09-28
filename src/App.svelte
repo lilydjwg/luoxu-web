@@ -279,6 +279,7 @@
   #searchbox {
     display: flex;
     margin-left: 1px;
+    padding-bottom: 8px;
   }
   #searchbox > :global(*) {
     /* make borders collapse */
@@ -294,7 +295,7 @@
   }
 
   .error {
-    color: red;
+    color: var(--color-error);
     text-align: center;
   }
 
@@ -307,27 +308,7 @@
     margin: 1em 0;
   }
   .info > p {
-    border: 1px #bfbfbf solid;
+    border: 1px solid var(--color-border);
     border-radius: 2em;
-  }
-
-  :global(input),
-  :global(button),
-  :global(select) {
-    border-radius: 0;
-    border: 1px solid var(--color-inactive);
-    height: 2.3em;
-  }
-  :global(input:focus),
-  :global(button:focus),
-  :global(select:focus) {
-    border-color: var(--color-active);
-    outline: 1px solid var(--color-active);
-    /* make focus border topmost */
-    z-index: 10;
-  }
-  :global(:root) {
-    --color-inactive: #bfbfbf;
-    --color-active: #add8e6;
   }
 </style>

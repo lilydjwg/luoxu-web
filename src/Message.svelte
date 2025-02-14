@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount, getContext } from "svelte";
 
-  export let msg: {
+  interface Props {
+    msg: {
     from_name: string;
     t;
     edited;
@@ -10,8 +11,11 @@
     from_id: string;
     html: string;
   };
-  export let groupinfo: string[][];
-  export let now: Date;
+    groupinfo: string[][];
+    now: Date;
+  }
+
+  let { msg, groupinfo, now }: Props = $props();
 
   const formatter = new Intl.DateTimeFormat(undefined, {
     timeStyle: "full",

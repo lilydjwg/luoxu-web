@@ -1,19 +1,25 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { onMount, getContext } from "svelte";
 
-  export let group: string;
 
-  export let selected: string;
-  export let selected_init: string;
+  interface Props {
+    group: string;
+    selected: string;
+    selected_init: string;
+  }
+
+  let { group, selected = $bindable(), selected_init = $bindable() }: Props = $props();
   let selected_name = "";
-  let selected_idx: number;
+  let selected_idx: number = $state();
 
   let to: NodeJS.Timeout;
-  let names = [];
+  let names = $state([]);
   let url = getContext("LUOXU_URL");
-  let input: HTMLInputElement;
-  let ul: HTMLUListElement;
-  let should_hide = false;
+  let input: HTMLInputElement = $state();
+  let ul: HTMLUListElement = $state();
+  let should_hide = $state(false);
 
   let abort = new AbortController();
 
@@ -128,27 +134,27 @@
   <input
     bind:this={input}
     type="text"
-    on:input={() => {
+    oninput={() => {
       should_hide = false;
       may_complete();
     }}
-    on:focus={() => (should_hide = false)}
-    on:blur={() => {
+    onfocus={() => (should_hide = false)}
+    onblur={() => {
       should_hide = true;
       update_value();
     }}
-    on:keydown={select_by_key}
+    onkeydown={select_by_key}
   />
   <img
     class="selected-avatar"
     alt=""
     src="{url}/avatar/{selected ? selected : 'nobody'}.jpg"
   />
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <ul
     bind:this={ul}
-    on:click={select_by_click}
-    on:mousedown|preventDefault={() => {}}
+    onclick={select_by_click}
+    onmousedown={preventDefault(() => {})}
     class:hidden={names.length === 0 || should_hide}
   >
     {#each names as name, i (name)}
@@ -159,7 +165,7 @@
   </ul>
 </div>
 
-<svelte:window on:resize={update_list_width} />
+<svelte:window onresize={update_list_width} />
 
 <style>
   div {

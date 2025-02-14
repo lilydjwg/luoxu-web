@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { onMount, setContext } from "svelte";
   import Message from "./Message.svelte";
   import Name from "./Name.svelte";
@@ -7,10 +9,10 @@
 
   const LUOXU_URL = "https://lab.lilydjwg.me/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");
-  let groups: { group_id: string; name: string }[] = [];
-  let group: string;
-  let query: string;
-  let error: string;
+  let groups: { group_id: string; name: string }[] = $state([]);
+  let group: string = $state();
+  let query: string = $state();
+  let error: string = $state();
   let result: {
     messages: {
       from_name: string;
@@ -23,13 +25,13 @@
     }[];
     has_more: boolean;
     groupinfo: string[][];
-  };
-  let now = new Date();
-  let loading = false;
-  let need_update_title = false;
-  let sender: string;
-  let selected_init: string;
-  let our_hash_change = false;
+  } = $state();
+  let now = $state(new Date());
+  let loading = $state(false);
+  let need_update_title = $state(false);
+  let sender: string = $state();
+  let selected_init: string = $state();
+  let our_hash_change = $state(false);
   let abort = new AbortController();
 
   setContext("LUOXU_URL", LUOXU_URL);
@@ -59,7 +61,7 @@
     }
   });
 
-  $: {
+  run(() => {
     // only update title on hash change (doing a search)
     if (need_update_title && groups) {
       let group_name: string;
@@ -79,7 +81,7 @@
       }
       need_update_title = false;
     }
-  }
+  });
 
   function do_hash_search() {
     const info = parse_hash();
@@ -189,7 +191,7 @@
 </script>
 
 <svelte:window
-  on:hashchange={() => {
+  onhashchange={() => {
     if (!our_hash_change) do_hash_search();
   }}
 />
@@ -201,7 +203,7 @@
         <option selected>正在加载群组信息...</option>
       </select>
     {:else}
-      <select bind:value={group} on:change={on_group_change}>
+      <select bind:value={group} onchange={on_group_change}>
         {#if islocal}
           <option value="">全部</option>
         {/if}
@@ -213,15 +215,15 @@
     <input
       type="search"
       bind:value={query}
-      on:input={() => (error = "")}
-      on:keydown={(e) => {
+      oninput={() => (error = "")}
+      onkeydown={(e) => {
         if (e.key === "Enter") {
           do_search();
         }
       }}
     />
     <Name {group} bind:selected={sender} {selected_init} />
-    <button on:click={() => do_search()}>搜索</button>
+    <button onclick={() => do_search()}>搜索</button>
   </div>
 
   {#if result}
@@ -261,7 +263,7 @@
     {/if}
     {#if result && result.has_more}
       <div class="info">
-        <button on:click={do_search_more}>加载更多</button>
+        <button onclick={do_search_more}>加载更多</button>
       </div>
     {/if}
   {/if}

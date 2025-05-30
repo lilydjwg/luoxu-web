@@ -158,7 +158,7 @@
     class:hidden={names.length === 0 || should_hide}
   >
     {#each names as name, i (name)}
-      <li data-idx={i} class:selected={i === selected_idx} title={name[1]}>
+      <li data-idx={i} class:selected={i === selected_idx} title={`${name[1]} (${name[0]})`}>
         <img src="{url}/avatar/{name[0]}.jpg" alt="avatar" />{name[1]}
       </li>
     {/each}

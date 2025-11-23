@@ -5,8 +5,9 @@
   import { onMount, setContext } from "svelte";
   import Message from "./Message.svelte";
   import Name from "./Name.svelte";
-  import { sleep } from "./util.js";
+  import { sleep, tg_oauth_data } from "./util.js";
   import "./global.css";
+  import { get } from "svelte/store";
 
   const LUOXU_URL = "https://apps.archlinuxcn.org/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");
@@ -37,28 +38,22 @@
   let our_hash_change = $state(false);
   let abort = new AbortController();
 
-  let tg_auth: boolean = $state(false);
-  let tg_auth_info: {
-    auth_date: number;
-    first_name: string;
-    id: number;
-    photo_url?: string;
-    username: string;
-    hash: string;
-  } = $state();
-
   function on_tg_auth(data) {
-    tg_auth_info = {};
-    tg_auth_info.auth_date = data.auth_date;
-    tg_auth_info.first_name = data.first_name;
-    tg_auth_info.id = data.id;
-    if (data.photo_url) {
-      tg_auth_info.photo_url = data.photo_url;
-    }
-    tg_auth_info.username = data.username;
-    tg_auth_info.hash = data.hash;
-    console.log("auth", tg_auth_info);
-    tg_auth = true;
+    tg_oauth_data.set(data);
+    fetch_groups();
+  }
+
+  function log_out() {
+    tg_oauth_data.set(null);
+    groups = [];
+    group = "";
+    token = "";
+    location.hash = "";
+    result = {
+      messages: [],
+      has_more: false,
+      groupinfo: [],
+    };
     fetch_groups();
   }
 
@@ -72,6 +67,14 @@
   }
 
   onMount(async () => {
+    const _tg_oauth_data = get(tg_oauth_data);
+    if (_tg_oauth_data) {
+      now = new Date();
+      const expire = (_tg_oauth_data.auth_date + 60 * 60 * 24 * 30) * 1000;
+      if (now.getTime() > expire) {
+        tg_oauth_data.set(null);
+      }
+    }
     do_hash_search();
     fetch_groups();
   });
@@ -101,17 +104,24 @@
   async function fetch_groups() {
     while (true) {
       let url = `${LUOXU_URL}/groups`;
-      if (tg_auth) {
+      const q = new URLSearchParams();
+      const _tg_oauth_data = get(tg_oauth_data);
+      if (_tg_oauth_data) {
         const _tg_auth_info = btoa(
           String.fromCharCode(
-            ...new TextEncoder().encode(JSON.stringify(tg_auth_info)),
+            ...new TextEncoder().encode(JSON.stringify(_tg_oauth_data)),
           ),
         )
           .replace(/\+/g, "-")
           .replace(/\//g, "_")
           .replace(/=+$/, "");
-        url += `?auth=${_tg_auth_info}`;
+        q.append("auth", _tg_auth_info);
       }
+      if (group && token) {
+        q.append("g", group);
+        q.append("token", token);
+      }
+      url += `?${q.toString()}`;
       try {
         const res = await fetch(url);
         groups = (await res.json()).groups;
@@ -255,14 +265,19 @@
 
 <main>
   {#if LUOXUAUTHBOT}
-    <Login
-      username={LUOXUAUTHBOT}
-      requestAccess={false}
-      onauth={(data) => {
-        console.log(data);
-        on_tg_auth(data);
-      }}
-    />
+    {#if !$tg_oauth_data}
+      <Login
+        username={LUOXUAUTHBOT}
+        onauth={(data) => {
+          on_tg_auth(data);
+        }}
+      />
+    {:else}
+      <div style="text-align: right">
+        已登录为 {$tg_oauth_data?.first_name}
+        <button onclick={log_out}>退出登录</button>
+      </div>
+    {/if}
   {/if}
 
   <div id="searchbox">

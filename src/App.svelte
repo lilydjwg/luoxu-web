@@ -37,6 +37,7 @@
   let selected_init: string = $state();
   let our_hash_change = $state(false);
   let abort = new AbortController();
+  let tg_oauth_button: boolean = $state(false);
 
   function on_tg_auth(data) {
     tg_oauth_data.set(data);
@@ -45,6 +46,7 @@
 
   function log_out() {
     tg_oauth_data.set(null);
+    tg_oauth_button = false;
     groups = [];
     group = "";
     token = "";
@@ -265,19 +267,24 @@
 
 <main>
   {#if LUOXUAUTHBOT}
-    {#if !$tg_oauth_data}
-      <Login
-        username={LUOXUAUTHBOT}
-        onauth={(data) => {
-          on_tg_auth(data);
-        }}
-      />
-    {:else}
-      <div style="text-align: right">
+    <div style="text-align: right">
+      {#if !$tg_oauth_data}
+        {#if tg_oauth_button}
+          <Login
+            username={LUOXUAUTHBOT}
+            buttonRadius={0}
+            onauth={(data) => {
+              on_tg_auth(data);
+            }}
+          />
+        {:else}
+          <button onclick={() => (tg_oauth_button = true)}>登录</button>
+        {/if}
+      {:else}
         已登录为 {$tg_oauth_data?.first_name}
-        <button onclick={log_out}>退出登录</button>
-      </div>
-    {/if}
+        <button onclick={log_out}>退出</button>
+      {/if}
+    </div>
   {/if}
 
   <div id="searchbox">

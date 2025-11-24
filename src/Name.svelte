@@ -1,16 +1,21 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
+  import { preventDefault } from "svelte/legacy";
 
   import { onMount, getContext } from "svelte";
 
-
   interface Props {
     group: string;
+    token: string;
     selected: string;
     selected_init: string;
   }
 
-  let { group, selected = $bindable(), selected_init = $bindable() }: Props = $props();
+  let {
+    group,
+    token,
+    selected = $bindable(),
+    selected_init = $bindable(),
+  }: Props = $props();
   let selected_name = "";
   let selected_idx: number = $state();
 
@@ -51,7 +56,13 @@
     abort.abort();
     abort = new AbortController();
     try {
-      const res = await fetch(`${url}/names?g=${group}&q=${input.value}`, {
+      const q = new URLSearchParams();
+      q.append("g", group);
+      if (token) {
+        q.append("token", token);
+      }
+      q.append("q", input.value);
+      const res = await fetch(`${url}/names?${q.toString()}`, {
         signal: abort.signal,
       });
       const j = await res.json();
@@ -158,7 +169,11 @@
     class:hidden={names.length === 0 || should_hide}
   >
     {#each names as name, i (name)}
-      <li data-idx={i} class:selected={i === selected_idx} title={`${name[1]} (${name[0]})`}>
+      <li
+        data-idx={i}
+        class:selected={i === selected_idx}
+        title={`${name[1]} (${name[0]})`}
+      >
         <img src="{url}/avatar/{name[0]}.jpg" alt="avatar" />{name[1]}
       </li>
     {/each}

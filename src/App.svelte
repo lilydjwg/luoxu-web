@@ -1,16 +1,20 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import { run } from "svelte/legacy";
 
+  import { Login } from "sveltegram";
   import { onMount, setContext } from "svelte";
   import Message from "./Message.svelte";
   import Name from "./Name.svelte";
-  import { sleep } from "./util.js";
+  import { sleep, tg_oauth_data } from "./util.js";
   import "./global.css";
+  import { get } from "svelte/store";
 
   const LUOXU_URL = "https://apps.archlinuxcn.org/luoxu";
   const islocal = LUOXU_URL.startsWith("http://localhost");
-  let groups: { group_id: string; name: string }[] = $state([]);
+  const LUOXUAUTHBOT = "";
+  let groups: { group_id: string; name: string; token?: string }[] = $state([]);
   let group: string = $state();
+  let token: string = $state();
   let query: string = $state();
   let error: string = $state();
   let result: {
@@ -33,6 +37,27 @@
   let selected_init: string = $state();
   let our_hash_change = $state(false);
   let abort = new AbortController();
+  let tg_oauth_button: boolean = $state(false);
+
+  function on_tg_auth(data) {
+    tg_oauth_data.set(data);
+    fetch_groups();
+  }
+
+  function log_out() {
+    tg_oauth_data.set(null);
+    tg_oauth_button = false;
+    groups = [];
+    group = "";
+    token = "";
+    location.hash = "";
+    result = {
+      messages: [],
+      has_more: false,
+      groupinfo: [],
+    };
+    fetch_groups();
+  }
 
   setContext("LUOXU_URL", LUOXU_URL);
 
@@ -44,21 +69,16 @@
   }
 
   onMount(async () => {
-    do_hash_search();
-    while (true) {
-      try {
-        const res = await fetch(`${LUOXU_URL}/groups`);
-        groups = (await res.json()).groups;
-        need_update_title = true;
-        if (!group) {
-          group = "";
-        }
-        break;
-      } catch (e) {
-        console.error("failed to fetch group info, will retry", e);
-        await sleep(1000);
+    const _tg_oauth_data = get(tg_oauth_data);
+    if (_tg_oauth_data) {
+      now = new Date();
+      const expire = (_tg_oauth_data.auth_date + 60 * 60 * 24 * 30) * 1000;
+      if (now.getTime() > expire) {
+        tg_oauth_data.set(null);
       }
     }
+    do_hash_search();
+    fetch_groups();
   });
 
   run(() => {
@@ -83,14 +103,56 @@
     }
   });
 
+  async function fetch_groups() {
+    while (true) {
+      let url = `${LUOXU_URL}/groups`;
+      const q = new URLSearchParams();
+      const _tg_oauth_data = get(tg_oauth_data);
+      if (_tg_oauth_data) {
+        const _tg_auth_info = btoa(
+          String.fromCharCode(
+            ...new TextEncoder().encode(JSON.stringify(_tg_oauth_data)),
+          ),
+        )
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/, "");
+        q.append("auth", _tg_auth_info);
+      }
+      if (group && token) {
+        q.append("g", group);
+        q.append("token", token);
+      }
+      url += `?${q.toString()}`;
+      try {
+        const res = await fetch(url);
+        groups = (await res.json()).groups;
+        need_update_title = true;
+        if (!group) {
+          group = "";
+        }
+        if (!token) {
+          token = "";
+        }
+        break;
+      } catch (e) {
+        console.error("failed to fetch group info, will retry", e);
+        await sleep(1000);
+      }
+    }
+  }
   function do_hash_search() {
     const info = parse_hash();
     if (info) {
       query = "";
       group = "";
+      token = "";
       result = null;
       if (info.has("g")) {
         group = info.get("g");
+      }
+      if (info.has("token")) {
+        token = info.get("token");
       }
       if (info.has("q")) {
         query = info.get("q");
@@ -128,6 +190,12 @@
       const q = new URLSearchParams();
       if (group) {
         q.append("g", group);
+        const _token = groups.find((g) => g.group_id === group)?.token;
+        if (_token) {
+          q.append("token", _token);
+        } else if (token) {
+          q.append("token", token);
+        }
       }
       if (query) {
         q.append("q", query);
@@ -176,6 +244,7 @@
 
   async function on_group_change() {
     error = "";
+    token = groups.find((g) => g.group_id === group)?.token || "";
     if (query) {
       await do_search();
     }
@@ -197,6 +266,27 @@
 />
 
 <main>
+  {#if LUOXUAUTHBOT}
+    <div style="text-align: right">
+      {#if !$tg_oauth_data}
+        {#if tg_oauth_button}
+          <Login
+            username={LUOXUAUTHBOT}
+            buttonRadius={0}
+            onauth={(data) => {
+              on_tg_auth(data);
+            }}
+          />
+        {:else}
+          <button onclick={() => (tg_oauth_button = true)}>登录</button>
+        {/if}
+      {:else}
+        已登录为 {$tg_oauth_data?.first_name}
+        <button onclick={log_out}>退出</button>
+      {/if}
+    </div>
+  {/if}
+
   <div id="searchbox">
     {#if groups.length === 0}
       <select>
@@ -222,7 +312,7 @@
         }
       }}
     />
-    <Name {group} bind:selected={sender} {selected_init} />
+    <Name {group} {token} bind:selected={sender} {selected_init} />
     <button onclick={() => do_search()}>搜索</button>
   </div>
 

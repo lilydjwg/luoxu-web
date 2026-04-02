@@ -106,6 +106,7 @@
     margin: 0.2em 0;
     max-height: 20.5em;
     overflow-x: auto;
+    scrollbar-gutter: stable;
   }
   .text > :global(.keyword) {
     background-color: var(--color-keyword-bg);
